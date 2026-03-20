@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shoppingassistantservice
+  namespace: boutique
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shoppingassistantservice
+  template:
+    metadata:
+      labels:
+        app: shoppingassistantservice
+    spec:
+      serviceAccountName: boutique-sa
+
+      imagePullSecrets:
+        - name: ecr-secret
+
+      # POD security context (correct place)
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+          
+      containers:
+        - name: shoppingassistantservice
+          image: 998948477550.dkr.ecr.eu-west-2.amazonaws.com/boutique-shoppingassistant:v1
+          imagePullPolicy: Always
+
+          # container security context (correct place)
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
+
+          ports:
+            - containerPort: 8080
