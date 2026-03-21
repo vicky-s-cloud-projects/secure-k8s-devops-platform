@@ -10,7 +10,8 @@ pipeline {
 
     stage('Clone') {
       steps {
-        git 'https://github.com/vicky-s-cloud-projects/secure-k8s-devops-platform.git'
+        git branch: 'main',
+            url: 'https://github.com/vicky-s-cloud-projects/secure-k8s-devops-platform.git'
       }
     }
 
