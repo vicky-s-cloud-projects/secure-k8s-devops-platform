@@ -1,0 +1,52 @@
+pipeline {
+  agent any
+
+  environment {
+    AWS_REGION = "eu-west-2"
+    ECR = "998948477550.dkr.ecr.eu-west-2.amazonaws.com"
+  }
+
+  stages {
+
+    stage('Clone') {
+      steps {
+        git 'https://github.com/vicky-s-cloud-projects/secure-k8s-devops-platform.git'
+      }
+    }
+
+    stage('Build') {
+      steps {
+        sh '''
+        docker build -t boutique-frontend ./apps/online-boutique/frontend
+        '''
+      }
+    }
+
+    stage('Login ECR') {
+      steps {
+        sh '''
+        aws ecr get-login-password --region $AWS_REGION \
+        | docker login --username AWS --password-stdin $ECR
+        '''
+      }
+    }
+
+    stage('Push') {
+      steps {
+        sh '''
+        docker tag boutique-frontend $ECR/boutique-frontend:v1
+        docker push $ECR/boutique-frontend:v1
+        '''
+      }
+    }
+
+    stage('Deploy') {
+      steps {
+        sh '''
+        kubectl apply -f kubernetes/boutique/
+        '''
+      }
+    }
+
+  }
+}
