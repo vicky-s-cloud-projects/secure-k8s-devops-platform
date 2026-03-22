@@ -295,7 +295,7 @@ module "jenkins" {
   source              = "./modules/ec2"
   name                = "jenkins-server"
   ami_id              = data.aws_ami.ubuntu.id
-  instance_type       = "t3.micro"
+  instance_type       = "m7i-flex.large"
   subnet_id           = module.vpc.public_subnet_ids[0]
   security_group_ids  = [module.jenkins_sg.security_group_id]
   key_name            = var.key_name
