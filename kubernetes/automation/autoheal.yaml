@@ -1,0 +1,50 @@
+apiVersion: batch/v1
+kind: CronJob
+
+metadata:
+  name: autoheal
+  namespace: boutique
+
+spec:
+  schedule: "*/15 * * * *"
+
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+
+      template:
+        spec:
+
+          serviceAccountName: boutique-sa
+
+          imagePullSecrets:
+          - name: ecr-secret
+
+          securityContext:
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+
+          containers:
+          - name: autoheal
+            image: 998948477550.dkr.ecr.eu-west-2.amazonaws.com/autoheal:v1
+
+            resources:
+              requests:
+                memory: "50Mi"
+                cpu: "50m"
+              limits:
+                memory: "100Mi"
+                cpu: "100m"
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities:
+                drop:
+                  - ALL
+
+          restartPolicy: OnFailure

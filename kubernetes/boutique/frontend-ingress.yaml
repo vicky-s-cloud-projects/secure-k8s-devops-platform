@@ -3,10 +3,17 @@ kind: Ingress
 metadata:
   name: frontend-ingress
   namespace: boutique
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: traefik
+  tls:
+  - hosts:
+    - vivekchalla.online
+    secretName: boutique-tls
   rules:
-  - http:
+  - host: vivekchalla.online
+    http:
       paths:
       - path: /
         pathType: Prefix
