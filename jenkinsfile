@@ -1,53 +1,56 @@
 pipeline {
-  agent any
 
-  environment {
-    AWS_REGION = "eu-west-2"
-    ECR = "998948477550.dkr.ecr.eu-west-2.amazonaws.com"
-  }
+    agent any
 
-  stages {
-
-    stage('Clone') {
-      steps {
-        git branch: 'main',
-            url: 'https://github.com/vicky-s-cloud-projects/secure-k8s-devops-platform.git'
-      }
+    environment {
+        AWS_REGION = "eu-west-2"
+        ECR_REPO = "998948477550.dkr.ecr.eu-west-2.amazonaws.com/boutique-frontend"
+        IMAGE_TAG = "v${BUILD_NUMBER}"
     }
 
-    stage('Build') {
-      steps {
-        sh '''
-        docker build -t boutique-frontend ./apps/online-boutique/src/frontend
-        '''
-      }
-    }
+    stages {
 
-    stage('Login ECR') {
-      steps {
-        sh '''
-        aws ecr get-login-password --region $AWS_REGION \
-        | docker login --username AWS --password-stdin $ECR
-        '''
-      }
-    }
+        stage('Clone') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/vicky-s-cloud-projects/secure-k8s-devops-platform.git',
+                    credentialsId: 'github-cred'
+            }
+        }
 
-    stage('Push') {
-      steps {
-        sh '''
-        docker tag boutique-frontend $ECR/boutique-frontend:v1
-        docker push $ECR/boutique-frontend:v1
-        '''
-      }
-    }
+        stage('Build') {
+            steps {
+                sh """
+                docker build -t boutique-frontend ./apps/online-boutique/src/frontend
+                docker tag boutique-frontend $ECR_REPO:$IMAGE_TAG
+                """
+            }
+        }
 
-    stage('Deploy') {
-      steps {
-        sh '''
-        kubectl apply -f kubernetes/boutique/
-        '''
-      }
-    }
+        stage('Login ECR') {
+            steps {
+                sh """
+                aws ecr get-login-password --region $AWS_REGION |
+                docker login --username AWS --password-stdin 998948477550.dkr.ecr.eu-west-2.amazonaws.com
+                """
+            }
+        }
 
-  }
+        stage('Push') {
+            steps {
+                sh """
+                docker push $ECR_REPO:$IMAGE_TAG
+                """
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh """
+                kubectl set image deployment/frontend frontend=$ECR_REPO:$IMAGE_TAG -n boutique
+                """
+            }
+        }
+
+    }
 }
