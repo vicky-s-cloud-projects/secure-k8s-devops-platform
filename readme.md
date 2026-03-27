@@ -33,21 +33,48 @@ All pods are running successfully
 ## Boutique Application:
 
 Boutique website is successfully running and website url has secure connection with https
-![boutique-website](videos/kubernetes-boutique-app.mp4)
+
+<div align="center">
+
+  ▶️ **Click below to watch full project walkthrough**
+  
+  [![boutique-website](https://img.youtube.com/vi/GkRz93QG0Y4/maxresdefault.jpg)](https://www.youtube.com/watch?v=GkRz93QG0Y4)
+  
+</div>
 
 ## Jenkins CI/CD Pipeline:
 
-jenkins server has secure https connection:
-![jenkins](videos/jenkins-pipeline-boutique.mp4)
+jenkins server has secure https connection
+
+<div align="center">
+
+  ▶️ **Click below to watch jenkins CI/CD overview**
+  
+  [![jenkins-website](https://img.youtube.com/vi/9i8dKrU7iZ0/maxresdefault.jpg)](https://www.youtube.com/watch?v=9i8dKrU7iZ0)
+  
+</div>
 
 ## Amazon ECR: 
 
 All the microservices are containerd and stored in ecr registry
-![ecr](videos/ecr-boutique-repository.mp4)
+
+<div align="center">
+
+  ▶️ **Click below to watch AWS ECR registry with versioned tags attached to frontend**
+  
+  [![aws-ecr](https://img.youtube.com/vi/Q3MURIkb7uo/maxresdefault.jpg)](https://www.youtube.com/watch?v=Q3MURIkb7uo)
+  
+</div>
 
 ## Grafana Dashboard:
 
-![grafana](videos/grafana-boutique-dashboard.mp4)
+<div align="center">
+
+  ▶️ **Click below to watch Grafana dashboard**
+  
+  [![grafana-dashboard](https://img.youtube.com/vi/Up_KuF_vqnM/maxresdefault.jpg)](https://www.youtube.com/watch?v=Up_KuF_vqnM)
+  
+</div>
 
 ## Prometheus:
 
